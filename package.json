@@ -1,0 +1,21 @@
+{
+  "name": "odata-modeller",
+  "version": "0.0.1",
+  "description": "A tool for creating graphical representations of OData services.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bradzacher/odata-modeller.git"
+  },
+  "keywords": [
+    "odata",
+    "model",
+    "service"
+  ],
+  "author": "Brad Zacher",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bradzacher/odata-modeller/issues"
+  },
+  "homepage": "https://github.com/bradzacher/odata-modeller#readme"
+}
