@@ -33,11 +33,11 @@
         "babel-preset-react": "6.16.0",
         "babel-runtime": "^6.18.0",
         "css-loader": "0.26.0",
-        "extract-text-webpack-plugin": "^1.0.1",
         "eslint": "^3.11.1",
         "eslint-config-airbnb-base": "^10.0.1",
         "eslint-plugin-import": "^2.2.0",
         "eslint-plugin-react": "^6.7.1",
+        "extract-text-webpack-plugin": "^1.0.1",
         "file-loader": "0.9.0",
         "html-webpack-plugin": "^2.24.1",
         "immutable": "^3.8.1",
@@ -46,6 +46,7 @@
         "react": "15.4.1",
         "react-dom": "15.4.1",
         "react-hot-loader": "^3.0.0-beta.6",
+        "react-mdl": "^1.9.0",
         "redux": "^3.6.0",
         "sass-loader": "^4.0.2",
         "style-loader": "0.13.1",
@@ -132,11 +133,21 @@
                 }
             ],
             "class-methods-use-this": 0,
-            "react/jsx-uses-vars": [ 2 ]
+            "react/jsx-uses-vars": [
+                2
+            ]
         }
     },
     "babel": {
-        "presets": ["es2015", "react"],
-        "plugins": ["transform-runtime", "transform-decorators-legacy", "transform-class-properties", "react-hot-loader/babel"]
+        "presets": [
+            "es2015",
+            "react"
+        ],
+        "plugins": [
+            "transform-runtime",
+            "transform-decorators-legacy",
+            "transform-class-properties",
+            "react-hot-loader/babel"
+        ]
     }
 }
