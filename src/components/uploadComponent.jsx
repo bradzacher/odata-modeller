@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, FABButton } from 'react-mdl';
+import { Icon, FABButton, Snackbar } from 'react-mdl';
 
 import { readFile } from '../flux/actions/readFile';
 import store from '../flux/store';
@@ -16,16 +16,34 @@ export default class UploadComponent extends React.Component {
         this.onDragOver = this.onDragOver.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
+        this.onSnackbarTimeout = this.onSnackbarTimeout.bind(this);
 
         this.state = {
             inputValue: '',
+            showSnackbar: false,
+            snackbarText: '',
             // i found that the best way to manage the drag/drop state was to keep track of the count of enters/leaves
             // count <= 0, then has left. count > 0, then has entered.
             enterCount: 0,
         };
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.parseError) {
+            this.setState({
+                showSnackbar: true,
+                snackbarText: nextProps.parseError,
+            });
+        }
+    }
+
     onFileUpload(file) {
+        if (this.props.hasExistingMetadata) {
+            // todo - make nicer....
+            if (!confirm('You have existing metadata - do you want to overwrite it?')) {
+                return;
+            }
+        }
         // send the file to the store
         store.dispatch(readFile(file));
     }
@@ -62,6 +80,12 @@ export default class UploadComponent extends React.Component {
         // clear the input field in case the user wants to re-select the same file
         this.setState({
             inputValue: '',
+        });
+    }
+
+    onSnackbarTimeout() {
+        this.setState({
+            showSnackbar: false,
         });
     }
 
@@ -107,6 +131,8 @@ export default class UploadComponent extends React.Component {
             height: '56px',
         };
 
+        console.log(this.state.showSnackbar);
+
         return (
             <div style={divContainerStyle} onDrop={this.onDrop}
                  onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
@@ -119,7 +145,21 @@ export default class UploadComponent extends React.Component {
                     </label>
                 </FABButton>
                 <h3 style={dropTitleStyle}>Release to upload.</h3>
+                <Snackbar active={this.state.showSnackbar} onTimeout={this.onSnackbarTimeout}
+                          onClick={this.onSnackbarTimeout} action='Close'>
+                    {this.state.snackbarText}
+                </Snackbar>
             </div>
         );
     }
 }
+
+UploadComponent.defaultProps = {
+    hasExistingMetadata: false,
+    parseError: null,
+};
+
+UploadComponent.propTypes = {
+    hasExistingMetadata: React.PropTypes.bool,
+    parseError: React.PropTypes.string,
+};
