@@ -20,7 +20,7 @@
     "homepage": "https://github.com/bradzacher/odata-modeller#readme",
     "scripts": {
         "build": "webpack --config webpack.production.config.js --progress --profile --colors",
-        "start": "webpack-dev-server --progress --profile --colors",
+        "start": "webpack-dev-server --progress --profile --colors --hot",
         "lint": "eslint --ext js --ext jsx src || exit 0"
     },
     "dependencies": {
