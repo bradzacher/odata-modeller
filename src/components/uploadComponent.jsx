@@ -4,6 +4,8 @@ import { Icon, FABButton, Snackbar } from 'react-mdl';
 import { readFile } from '../flux/actions/readFile';
 import store from '../flux/store';
 
+let id = 0;
+
 export default class UploadComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -26,6 +28,9 @@ export default class UploadComponent extends React.Component {
             // count <= 0, then has left. count > 0, then has entered.
             enterCount: 0,
         };
+
+        this.id = id;
+        id += 1;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -94,25 +99,22 @@ export default class UploadComponent extends React.Component {
 
         const inputStyle = {
             opacity: 0,
-            height: '100%',
+            height: 'calc(100% - 48px)',
             width: '100%',
             position: 'absolute',
-            top: 0,
+            top: '24px',
             left: 0,
             cursor: 'pointer',
         };
         const labelStyle = {
             display: 'block',
-            height: '100%',
-            width: '100%',
+            marginTop: '24px',
+            marginBottom: '24px',
             cursor: 'pointer',
-            position: 'relative',
         };
         const buttonStyle = {
             display: isDropTarget ? 'none' : 'inline-block',
             cursor: 'pointer',
-            marginTop: '24px',
-            marginBottom: '24px',
         };
         const divContainerStyle = {
             height: '100%',
@@ -133,17 +135,21 @@ export default class UploadComponent extends React.Component {
 
         console.log(this.state.showSnackbar);
 
+        const inputId = `upload-button${this.id}`;
+
         return (
             <div style={divContainerStyle} onDrop={this.onDrop}
                  onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                  onDragEnd={this.onDragEnd} onDragLeave={this.onDragLeave}>
                 <h3>Select, or drop a metadata.xml file</h3>
-                <FABButton colored style={buttonStyle}>
-                    <label style={labelStyle}>
-                        <Icon name='file_upload' />
-                        <input type='file' style={inputStyle} onChange={this.onInputChange} value={this.state.inputValue} />
+                <div style={{ position: 'relative' }}>
+                    <label style={labelStyle} htmlFor={inputId}>
+                        <FABButton colored style={buttonStyle}>
+                            <Icon name='file_upload' />
+                        </FABButton>
                     </label>
-                </FABButton>
+                    <input type='file' name={inputId} style={inputStyle} onChange={this.onInputChange} value={this.state.inputValue} />
+                </div>
                 <h3 style={dropTitleStyle}>Release to upload.</h3>
                 <Snackbar active={this.state.showSnackbar} onTimeout={this.onSnackbarTimeout}
                           onClick={this.onSnackbarTimeout} action='Close'>

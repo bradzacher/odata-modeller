@@ -23,7 +23,16 @@ export const readFile = file => (dispatch) => {
             // check for error
             const parseError = doc.getElementsByTagName('parsererror')[0];
             if (parseError) {
-                const error = parseError.getElementsByTagName('div')[0].innerHTML.trim();
+                let error = parseError.getElementsByTagName('div')[0];
+                if (!error) {
+                    error = parseError.innerHTML;
+                } else {
+                    error = error.innerHTML;
+                }
+                error = error.trim();
+
+                console.error(error);
+
                 resolve(dispatch({
                     type: PARSE_FILE_ERROR,
                     error,
