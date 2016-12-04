@@ -1,7 +1,70 @@
+export const PARSE_FILE_ERROR = 'PARSE_FILE_ERROR';
+function parseFileError(detailedError) {
+    return {
+        type: PARSE_FILE_ERROR,
+        error: 'Error parsing metadata.xml, see the console for detailed error message.',
+        detailedError,
+    };
+}
+
+function arrayLike(fnName, arr, ...args) {
+    return Array.prototype[fnName].call(arr, ...args);
+}
+function getAttributeValue(element, attrName) {
+    const attr = element.attributes.getNamedItem(attrName);
+    return attr ? attr.value : null;
+}
+
+function decodeMetadata(doc) {
+    const schema = doc.getElementsByTagName('Schema')[0];
+    if (!schema) {
+        throw parseFileError('Schema element was not found in the document.');
+    }
+
+    const entities = arrayLike('map', schema.getElementsByTagName('EntityType'),
+        (entity) => {
+            // get the key names
+            const keyElement = entity.getElementsByTagName('Key')[0];
+            const keyRefs = arrayLike('map', keyElement.getElementsByTagName('PropertyRef'),
+                k => getAttributeValue(k, 'Name'));
+
+            // get the properties
+            const properties = arrayLike('map', entity.getElementsByTagName('Property'),
+                (p) => {
+                    const name = getAttributeValue(p, 'Name');
+                    return {
+                        name,
+                        type: getAttributeValue(p, 'Type'),
+                        nullable: getAttributeValue(p, 'Nullable'),
+                        // check if the property belogs to the entity's key
+                        isKey: keyRefs.filter(k => k === name).length > 0,
+                    };
+                });
+
+            // get the navigation properties
+            const navProperties = arrayLike('map', entity.getElementsByTagName('NavigationProperty'),
+                p => ({
+                    name: getAttributeValue(p, 'Name'),
+                    type: 'Navigation',
+                    association: getAttributeValue(p, 'Relationship'),
+                }));
+
+            // return the structured data
+            return {
+                name: getAttributeValue(entity, 'Name'),
+                properties: properties.concat(navProperties),
+            };
+        });
+
+    window.xx = {
+        schema,
+        entities,
+    };
+}
+
 // dispatched when the user selects a new metadata file
 export const READ_FILE = 'READ_FILE';
 export const PARSE_FILE = 'PARSE_FILE';
-export const PARSE_FILE_ERROR = 'PARSE_FILE_ERROR';
 export const readFile = file => (dispatch) => {
     if (!file) {
         return dispatch({
@@ -20,29 +83,37 @@ export const readFile = file => (dispatch) => {
         const reader = new FileReader();
         reader.onload = () => {
             // parse the XML
+            let detailedError;
             const parser = new DOMParser();
             let doc;
             try {
                 doc = parser.parseFromString(reader.result, 'text/xml');
             } catch (e) {
-                console.error('exception', e);
+                detailedError = e;
             }
 
             // check for error
             const parseError = doc.getElementsByTagName('parsererror')[0];
             if (parseError) {
-                const detailedError = parseError.innerHTML.trim();
-                resolve(dispatch({
-                    type: PARSE_FILE_ERROR,
-                    error: 'Error parsing metadata.xml, see the console for detailed error message.',
-                    detailedError,
-                }));
+                detailedError = parseError.innerHTML.trim();
+                resolve(dispatch(parseFileError(detailedError)));
             } else {
-                // resolve by dispatching a PARSE_FILE action
-                resolve(dispatch({
-                    type: PARSE_FILE,
-                    doc,
-                }));
+                // convert the document into a more managable form
+                try {
+                    const decodedDoc = decodeMetadata(doc);
+
+                    // resolve by dispatching a PARSE_FILE action
+                    resolve(dispatch({
+                        type: PARSE_FILE,
+                        doc: decodedDoc,
+                    }));
+                } catch (e) {
+                    if (e instanceof Error) {
+                        resolve(dispatch(parseFileError(e)));
+                    } else {
+                        resolve(dispatch(e));
+                    }
+                }
             }
         };
         reader.readAsText(file);

@@ -6,8 +6,8 @@ import 'react-mdl/extra/material';
 
 import './index.scss';
 
-import UploadComponent from './components/uploadComponent.jsx';
-import ContentContainer from './components/contentContainer.jsx';
+import UploadComponent from './containers/uploadComponentContainer.jsx';
+import ModelCanvas from './containers/modelCanvasContainer.jsx';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -78,7 +78,7 @@ export default class App extends React.Component {
                         </Navigation>
                     </Header>
                     <Content style={{ height: '100%' }}>
-                        <ContentContainer style={contentStyle} />
+                        <ModelCanvas style={contentStyle} />
                         <div style={uploadStyle}>
                             <FABButton onClick={this.closeUpload} style={uploadCloseButtonStyle} mini colored>
                                 <Icon name='close' />
@@ -92,11 +92,11 @@ export default class App extends React.Component {
     }
 }
 
-App.prototype.defaultProps = {
+App.defaultProps = {
     hasMetadata: false,
     metadataId: -1,
 };
-App.prototype.propTypes = {
+App.propTypes = {
     hasExistingMetadata: React.PropTypes.bool,
     metadataId: React.PropTypes.number,
 };
