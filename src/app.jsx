@@ -28,9 +28,11 @@ export default class App extends React.Component {
         });
     }
     closeUpload() {
-        this.setState({
-            showUpload: false,
-        });
+        if (this.props.hasExistingMetadata) {
+            this.setState({
+                showUpload: false,
+            });
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -43,6 +45,12 @@ export default class App extends React.Component {
     }
 
     render() {
+        const uploadCloseButtonStyle = {
+            display: this.props.hasExistingMetadata ? 'block' : 'none',
+            position: 'absolute',
+            right: '12px',
+            top: '12px',
+        };
         const contentStyle = {
             display: 'none',
             height: '100%',
@@ -72,7 +80,7 @@ export default class App extends React.Component {
                     <Content style={{ height: '100%' }}>
                         <ContentContainer style={contentStyle} />
                         <div style={uploadStyle}>
-                            <FABButton onClick={this.closeUpload} style={{ position: 'absolute', right: '12px', top: '12px' }} mini colored={this.props.hasExistingMetadata}>
+                            <FABButton onClick={this.closeUpload} style={uploadCloseButtonStyle} mini colored>
                                 <Icon name='close' />
                             </FABButton>
                             <UploadComponent />
@@ -92,4 +100,3 @@ App.prototype.propTypes = {
     hasExistingMetadata: React.PropTypes.bool,
     metadataId: React.PropTypes.number,
 };
-
