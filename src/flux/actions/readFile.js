@@ -21,6 +21,9 @@ function decodeMetadata(doc) {
         throw parseFileError('Schema element was not found in the document.');
     }
 
+    const namespace = `${getAttributeValue(schema, 'Namespace')}.`;
+
+    // grab the entities
     const entities = arrayLike('map', schema.getElementsByTagName('EntityType'),
         (entity) => {
             // get the key names
@@ -46,7 +49,8 @@ function decodeMetadata(doc) {
                 p => ({
                     name: getAttributeValue(p, 'Name'),
                     type: 'Navigation',
-                    association: getAttributeValue(p, 'Relationship'),
+                    // grab the association key and de-namespace it
+                    association: getAttributeValue(p, 'Relationship').replace(namespace, ''),
                 }));
 
             // return the structured data
@@ -56,9 +60,26 @@ function decodeMetadata(doc) {
             };
         });
 
-    window.xx = {
-        schema,
+    // get the associations
+    const associations = arrayLike('map', schema.getElementsByTagName('Association'),
+        (ass) => {
+            // there should be two ends listed - the entities which are joined by the association
+            const ends = arrayLike('map', ass.getElementsByTagName('End'),
+                end => ({
+                    // grab the entity name and de-namespace it
+                    name: getAttributeValue(end, 'Type').replace(namespace, ''),
+                    multiplicity: getAttributeValue(end, 'Multiplicity'),
+                }));
+
+            return {
+                name: getAttributeValue(ass, 'Name'),
+                entities: ends,
+            };
+        });
+
+    return {
         entities,
+        associations,
     };
 }
 
