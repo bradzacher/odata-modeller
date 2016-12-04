@@ -4,7 +4,10 @@ export const PARSE_FILE = 'PARSE_FILE';
 export const PARSE_FILE_ERROR = 'PARSE_FILE_ERROR';
 export const readFile = file => (dispatch) => {
     if (!file) {
-        return Promise.reject('Invalid File');
+        return dispatch({
+            type: PARSE_FILE_ERROR,
+            error: 'Not a valid file',
+        });
     }
 
     // let the store know we're loading
@@ -28,12 +31,11 @@ export const readFile = file => (dispatch) => {
             // check for error
             const parseError = doc.getElementsByTagName('parsererror')[0];
             if (parseError) {
-                const error = parseError.innerHTML.trim();
-                console.error(error);
-
+                const detailedError = parseError.innerHTML.trim();
                 resolve(dispatch({
                     type: PARSE_FILE_ERROR,
                     error: 'Error parsing metadata.xml, see the console for detailed error message.',
+                    detailedError,
                 }));
             } else {
                 // resolve by dispatching a PARSE_FILE action

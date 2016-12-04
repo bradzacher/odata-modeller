@@ -27,6 +27,7 @@ export default function metadata(state = {
             });
 
         case PARSE_FILE_ERROR:
+            console.error(action.error, action.detailedError);
             return extend({}, state, {
                 isParsing: false,
                 parseError: action.error,
