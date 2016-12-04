@@ -18,24 +18,22 @@ export const readFile = file => (dispatch) => {
         reader.onload = () => {
             // parse the XML
             const parser = new DOMParser();
-            const doc = parser.parseFromString(reader.result, 'text/xml');
+            let doc;
+            try {
+                doc = parser.parseFromString(reader.result, 'text/xml');
+            } catch (e) {
+                console.error('exception', e);
+            }
 
             // check for error
             const parseError = doc.getElementsByTagName('parsererror')[0];
             if (parseError) {
-                let error = parseError.getElementsByTagName('div')[0];
-                if (!error) {
-                    error = parseError.innerHTML;
-                } else {
-                    error = error.innerHTML;
-                }
-                error = error.trim();
-
+                const error = parseError.innerHTML.trim();
                 console.error(error);
 
                 resolve(dispatch({
                     type: PARSE_FILE_ERROR,
-                    error,
+                    error: 'Error parsing metadata.xml, see the console for detailed error message.',
                 }));
             } else {
                 // resolve by dispatching a PARSE_FILE action

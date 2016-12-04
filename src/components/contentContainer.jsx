@@ -1,7 +1,5 @@
 import React from 'react';
 
-import UploadComponent from './uploadComponent.jsx';
-
 export default class ContentContainer extends React.Component {
     constructor(props) {
         super(props);
@@ -12,6 +10,6 @@ export default class ContentContainer extends React.Component {
     }
 
     render() {
-        return (<UploadComponent />);
+        return (<div />);
     }
 }

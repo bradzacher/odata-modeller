@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 
-import App from './app.jsx';
+import App from './containers/appContainer.jsx';
 import store from './flux/store';
 
 render(

@@ -133,8 +133,6 @@ export default class UploadComponent extends React.Component {
             height: '56px',
         };
 
-        console.log(this.state.showSnackbar);
-
         const inputId = `upload-button${this.id}`;
 
         return (
