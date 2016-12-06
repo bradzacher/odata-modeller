@@ -1,3 +1,7 @@
+const INITIAL_ENTITY_WIDTH = 250;
+const ENTITY_SPACING_BUFFER = 24;
+const ENTITY_POSITION_GUTTER = 8;
+
 export const PARSE_FILE_ERROR = 'PARSE_FILE_ERROR';
 function parseFileError(detailedError) {
     return {
@@ -25,7 +29,7 @@ function decodeMetadata(doc) {
 
     // grab the entities
     const entities = arrayLike('map', schema.getElementsByTagName('EntityType'),
-        (entity) => {
+        (entity, i) => {
             // get the key names
             const keyElement = entity.getElementsByTagName('Key')[0];
             const keyRefs = arrayLike('map', keyElement.getElementsByTagName('PropertyRef'),
@@ -44,6 +48,16 @@ function decodeMetadata(doc) {
                     };
                 });
 
+            // sort the props - putting keys first, then sorting alphabetically
+            properties.sort((a, b) => {
+                if (a.isKey && !b.isKey) {
+                    return -1;
+                } else if (!a.isKey && b.isKey) {
+                    return 1;
+                }
+                return a.name.localeCompare(b.name);
+            });
+
             // get the navigation properties
             const navProperties = arrayLike('map', entity.getElementsByTagName('NavigationProperty'),
                 p => ({
@@ -56,7 +70,12 @@ function decodeMetadata(doc) {
             // return the structured data
             return {
                 name: getAttributeValue(entity, 'Name'),
-                properties: properties.concat(navProperties),
+                properties,
+                navProperties,
+                width: INITIAL_ENTITY_WIDTH,
+                height: null,
+                top: ENTITY_POSITION_GUTTER,
+                left: ENTITY_POSITION_GUTTER + (i * (INITIAL_ENTITY_WIDTH + ENTITY_SPACING_BUFFER)),
             };
         });
 

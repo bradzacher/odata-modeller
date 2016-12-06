@@ -53,8 +53,6 @@ export default class App extends React.Component {
         };
         const contentStyle = {
             display: 'none',
-            height: '100%',
-            width: '100%',
         };
         const uploadStyle = {
             display: 'none',

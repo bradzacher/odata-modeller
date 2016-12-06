@@ -1,3 +1,52 @@
 * {
     box-sizing: border-box;
 }
+
+// unfortunately MDL uses PX sizing, rather than em sizing
+// so we have to do some dodgey hard-coded styling to resize everything..
+$padding-scale: 0.5;
+$font-scale: 0.75;
+.entity {
+    .mdl-list {
+        margin: 0;
+        padding: 0;
+
+        .mdl-list__item {
+            // reduce the top/bottom padding - the list items will provide enough
+            padding: 16px * $padding-scale;
+            font-size: 16px * $font-scale;
+            // remove the min-height and let it flow from content sizing
+            min-height: auto;
+
+            .mdl-list__item-secondary-content {
+                margin-left: 16px * $padding-scale;
+
+                .material-icons {
+                    font-size: 24px * $font-scale;
+                    height: 24px * $font-scale;
+                    width: 24px * $font-scale;
+                }
+            }
+        }
+    }
+
+    .mdl-card {
+        // we don't care how tall they are ultimately
+        min-height: auto;
+
+        .mdl-card__title {
+            // reduce the padding - the list items will provide enough
+            padding: 16px * $padding-scale;
+
+            .mdl-card__title-text {
+                font-size: 24px * $font-scale;
+            }
+        }
+
+        .mdl-card__supporting-text {
+            width: 100%;
+            // remove the top/bottom padding - the list items will provide enough
+            padding: 0 16px * $padding-scale;
+        }
+    }
+}

@@ -1,6 +1,7 @@
 import React from 'react';
+import extend from 'extend';
 
-import EntityComponent from './entityComponent.jsx';
+import Entity from './entity.jsx';
 
 export default class ModelCanvas extends React.Component {
     constructor(props) {
@@ -20,14 +21,28 @@ export default class ModelCanvas extends React.Component {
         const entityDivs = [];
         let count = 0;
         this.props.metadata.entities.forEach((e) => {
-            entityDivs.push(<EntityComponent entity={e} index={count} key={count} />);
+            entityDivs.push(<Entity entity={e} index={count} key={e.name} />);
             count += 1;
         });
 
+        const style = extend({
+            position: 'relative',
+            overflow: 'scroll',
+            height: '100%',
+            width: '100%',
+        }, this.props.style);
+
         return (
-            <div style={{ position: 'relative', overflow: 'scroll', height: '100%', width: '100%' }}>
+            <div style={style}>
                 {entityDivs}
             </div>
         );
     }
 }
+
+ModelCanvas.defaultProps = {
+    style: {},
+};
+ModelCanvas.propTypes = {
+    style: React.PropTypes.object,
+};
