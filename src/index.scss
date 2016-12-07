@@ -15,6 +15,10 @@ $colour-white: #ffffff;
 #app {
     height: 100%;
 
+    .mdl-layout__header {
+        background-color: $colour-primary;
+    }
+
     .mdl-layout__content {
         height: 100%;
     }

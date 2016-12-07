@@ -6,8 +6,7 @@ import 'react-mdl/extra/material';
 // import ES6 shims..
 import 'array.prototype.find';
 
-import styles from './index.scss';
-import colours from './colours';
+import './index.scss';
 
 import UploadComponent from './containers/uploadComponentContainer.jsx';
 import ModelCanvas from './containers/modelCanvasContainer.jsx';
@@ -59,7 +58,7 @@ export default class App extends React.Component {
         return (
             <div>
                 <Layout fixedHeader>
-                    <Header title='OData Model Viewer' style={{ backgroundColor: colours.primary }}>
+                    <Header title='OData Model Viewer'>
                         <Navigation>
                             <a href='#' onClick={this.showUpload}>
                                 Upload Metadata.xml
