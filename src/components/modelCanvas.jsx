@@ -7,9 +7,12 @@ export default class ModelCanvas extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            doc: null,
-        };
+        this.state = {};
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return this.props.style !== nextProps.style ||
+            this.props.metadata !== nextProps.metadata;
     }
 
     render() {
@@ -19,10 +22,8 @@ export default class ModelCanvas extends React.Component {
         }
 
         const entityDivs = [];
-        let count = 0;
         this.props.metadata.entities.forEach((e) => {
-            entityDivs.push(<Entity entity={e} index={count} key={e.name} />);
-            count += 1;
+            entityDivs.push(<Entity entity={e} key={e.name} />);
         });
 
         const style = extend({
@@ -42,7 +43,9 @@ export default class ModelCanvas extends React.Component {
 
 ModelCanvas.defaultProps = {
     style: {},
+    metadata: null,
 };
 ModelCanvas.propTypes = {
     style: React.PropTypes.object,
+    metadata: React.PropTypes.object,
 };

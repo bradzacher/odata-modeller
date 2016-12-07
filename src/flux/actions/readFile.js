@@ -44,7 +44,7 @@ function decodeMetadata(doc) {
                         type: getAttributeValue(p, 'Type'),
                         nullable: getAttributeValue(p, 'Nullable'),
                         // check if the property belogs to the entity's key
-                        isKey: keyRefs.filter(k => k === name).length > 0,
+                        isKey: !!keyRefs.find(k => k === name),
                     };
                 });
 

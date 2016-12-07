@@ -11,6 +11,10 @@ export default class PropertyList extends React.Component {
         this.state = {};
     }
 
+    shouldComponentUpdate(nextProps) {
+        return this.props.properties !== nextProps.properties;
+    }
+
     render() {
         const properties = this.props.properties.map(p => (<Property property={p} key={p.name} />));
         const navProperties = this.props.navProperties.map(p => (<NavProperty property={p} key={p.name} />));

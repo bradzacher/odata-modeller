@@ -8,6 +8,10 @@ export default class NavProperty extends React.Component {
         this.state = {};
     }
 
+    shouldComponentUpdate(nextProps) {
+        return this.props.property !== nextProps.property;
+    }
+
     render() {
         if (!this.props.property) {
             return (<div />);
