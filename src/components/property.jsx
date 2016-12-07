@@ -128,7 +128,7 @@ export default class Property extends React.Component {
         }
 
         return (
-            <ListItem>
+            <ListItem className='property'>
                 <ListItemContent>{this.props.property.name}</ListItemContent>
                 <ListItemAction>
                     <Tooltip label={iconText}>
