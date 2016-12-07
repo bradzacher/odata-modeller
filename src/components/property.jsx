@@ -27,12 +27,115 @@ export default class Property extends React.Component {
             iconText = 'Nullable';
         }
 
+        const type = this.props.property.type;
+        let typeTooltip = this.props.property.type.replace('Edm.', '');
+        let typeShort = '';
+        let useIcon = false;
+        switch (type) {
+            case 'Edm.Binary':
+                useIcon = true;
+                typeShort = 'exposure_zero';
+                break;
+
+            case 'Edm.Boolean':
+                useIcon = true;
+                typeShort = 'format_bold';
+                break;
+
+            case 'Edm.Byte':
+                useIcon = true;
+                typeShort = 'filter_8';
+                typeTooltip = 'Unsigned Byte';
+                break;
+
+            case 'Edm.DateTime':
+                useIcon = true;
+                typeShort = 'date_range';
+                break;
+
+            case 'Edm.DateTimeOffset':
+                useIcon = true;
+                typeShort = 'event_note';
+                break;
+
+            case 'Edm.Time':
+                useIcon = true;
+                typeShort = 'access_time';
+                break;
+
+            case 'Edm.Decimal':
+                useIcon = true;
+                typeShort = 'pie_chart_outlined';
+                typeTooltip = 'Signed Decimal';
+                break;
+
+            case 'Edm.Double':
+                typeShort = 'D';
+                typeTooltip = 'Signed Double Float';
+                break;
+
+            case 'Edm.Single':
+                typeShort = 'F';
+                typeTooltip = 'Signed Float';
+                break;
+
+            case 'Edm.Guid':
+                useIcon = true;
+                typeShort = 'language';
+                break;
+
+            case 'Edm.Int16':
+                typeShort = 'S';
+                typeTooltip = 'Signed Short';
+                break;
+
+            case 'Edm.Int32':
+                typeShort = 'I';
+                typeTooltip = 'Signed Int';
+                break;
+
+            case 'Edm.Int64':
+                typeShort = 'L';
+                typeTooltip = 'Signed Long';
+                break;
+
+            case 'Edm.SByte':
+                typeShort = 'I8';
+                typeTooltip = 'Signed Byte';
+                break;
+
+            case 'Edm.String':
+                useIcon = true;
+                typeShort = 'format_quote';
+                break;
+
+            default:
+                useIcon = true;
+                typeShort = 'help';
+                break;
+        }
+        typeTooltip = `${typeTooltip} (${type})`;
+
+        let typeElement;
+        if (useIcon) {
+            typeElement = <Icon name={typeShort} />;
+        } else {
+            typeElement = (
+                <span className='material-icons'>
+                    {typeShort}
+                </span>
+            );
+        }
+
         return (
             <ListItem>
                 <ListItemContent>{this.props.property.name}</ListItemContent>
                 <ListItemAction>
                     <Tooltip label={iconText}>
                         <Icon name={icon} />
+                    </Tooltip>
+                    <Tooltip label={typeTooltip}>
+                        {typeElement}
                     </Tooltip>
                 </ListItemAction>
             </ListItem>
