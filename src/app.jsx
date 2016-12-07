@@ -3,6 +3,8 @@ import { Layout, Header, Navigation, Content, FABButton, Icon } from 'react-mdl'
 // import the react-mdl library files
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material';
+// import ES6 shims..
+import 'array.prototype.find';
 
 import './index.scss';
 
