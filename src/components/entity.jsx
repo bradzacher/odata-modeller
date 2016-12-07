@@ -1,14 +1,10 @@
 import React from 'react';
-import extend from 'extend';
 import { Card, CardTitle, CardText } from 'react-mdl';
 
 import PropertyList from './propertyList.jsx';
-import styles from '../index.scss';
 
 import store from '../flux/store';
 import { entityMove } from '../flux/actions/entityInteraction';
-
-const minWidth = 100;
 
 export default class Entity extends React.Component {
     constructor(props) {
@@ -16,7 +12,6 @@ export default class Entity extends React.Component {
 
         this.state = {
             minHeight: 0,
-            minWidth,
         };
 
         this.onPointerDown = this.onPointerDown.bind(this);
@@ -83,34 +78,28 @@ export default class Entity extends React.Component {
             return (<div />);
         }
 
-        const containerStyles = extend({
+        const containerStyles = {
             minHeight: `${this.state.minHeight}px`,
-            minWidth: `${this.state.minWidth}px`,
 
-            overflow: 'visible',
-
-            position: 'absolute',
             top: `${this.props.entity.top}px`,
             left: `${this.props.entity.left}px`,
 
             width: `${this.props.entity.width}px`,
             // don't explicitly set height unless it's been explicitly set..
             height: this.props.entity.height ? `${this.props.entity.height}px` : 'auto',
+        };
 
-            // add a little padding so that the edge of the parent doesn't eat our nice shadows
-            paddingBottom: '8px',
-        }, this.props.style);
-
-        const cardStyles = extend({
-            overflow: 'hidden',
+        const cardStyles = {
             width: `${this.props.entity.width}px`,
             height: this.props.entity.height ? `${this.props.entity.height}px` : 'auto',
-        }, this.props.style);
+        };
 
         return (
-            <div style={containerStyles} className={styles.entity} ref={(div) => { this.container = div; }}>
+            <div style={containerStyles} className='entity' ref={(div) => { this.container = div; }}>
                 <Card shadow={1} style={cardStyles}>
-                    <CardTitle style={{ cursor: 'move' }} onMouseDown={this.onPointerDown} onTouchStart={this.onPointerDown}>{this.props.entity.name}</CardTitle>
+                    <CardTitle onMouseDown={this.onPointerDown} onTouchStart={this.onPointerDown}>
+                        {this.props.entity.name}
+                    </CardTitle>
                     <CardText>
                         <PropertyList properties={this.props.entity.properties} navProperties={this.props.entity.navProperties} />
                     </CardText>
@@ -122,9 +111,7 @@ export default class Entity extends React.Component {
 
 Entity.defaultProps = {
     entity: null,
-    style: {},
 };
 Entity.propTypes = {
     entity: React.PropTypes.object,
-    style: React.PropTypes.object,
 };

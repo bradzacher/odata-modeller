@@ -4,8 +4,6 @@ import { Icon, FABButton, Snackbar } from 'react-mdl';
 import { readFile } from '../flux/actions/readFile';
 import store from '../flux/store';
 
-let id = 0;
-
 export default class UploadComponent extends React.Component {
     constructor(props) {
         super(props);
@@ -28,9 +26,6 @@ export default class UploadComponent extends React.Component {
             // count <= 0, then has left. count > 0, then has entered.
             enterCount: 0,
         };
-
-        this.id = id;
-        id += 1;
     }
 
     componentWillReceiveProps(nextProps) {
@@ -96,59 +91,25 @@ export default class UploadComponent extends React.Component {
 
     render() {
         const isDropTarget = this.state.enterCount > 0;
-
-        const inputStyle = {
-            opacity: 0,
-            height: 'calc(100% - 48px)',
-            width: '100%',
-            position: 'absolute',
-            top: '24px',
-            left: 0,
-            cursor: 'pointer',
-        };
-        const labelStyle = {
-            display: 'block',
-            marginTop: '24px',
-            marginBottom: '24px',
-            cursor: 'pointer',
-        };
-        const buttonStyle = {
-            display: isDropTarget ? 'none' : 'inline-block',
-            cursor: 'pointer',
-        };
-        const divContainerStyle = {
-            height: '100%',
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '24px',
-            borderStyle: isDropTarget ? 'dashed' : 'solid',
-            borderColor: isDropTarget ? 'black' : 'rgba(0,0,0,0)',
-            borderWidth: '2px',
-        };
-        const dropTitleStyle = {
-            display: isDropTarget ? 'inline-block' : 'none',
-            height: '56px',
-        };
-
-        const inputId = `upload-button${this.id}`;
+        const inputId = 'upload-button';
 
         return (
-            <div style={divContainerStyle} onDrop={this.onDrop}
+            <div style={{
+                borderStyle: isDropTarget ? 'dashed' : 'solid',
+                borderColor: isDropTarget ? 'black' : 'rgba(0,0,0,0)',
+            }} onDrop={this.onDrop}
                  onDragOver={this.onDragOver} onDragEnter={this.onDragEnter}
                  onDragEnd={this.onDragEnd} onDragLeave={this.onDragLeave}>
                 <h3>Select, or drop a metadata.xml file</h3>
-                <div style={{ position: 'relative' }}>
-                    <label style={labelStyle} htmlFor={inputId}>
-                        <FABButton colored style={buttonStyle}>
+                <div className='upload-button-container'>
+                    <label htmlFor={inputId}>
+                        <FABButton style={{ display: isDropTarget ? 'none' : 'inline-block' }}>
                             <Icon name='file_upload' />
                         </FABButton>
                     </label>
-                    <input type='file' name={inputId} style={inputStyle} onChange={this.onInputChange} value={this.state.inputValue} />
+                    <input type='file' name={inputId} onChange={this.onInputChange} value={this.state.inputValue} />
                 </div>
-                <h3 style={dropTitleStyle}>Release to upload.</h3>
+                <h3 className='drop-title' style={{ display: isDropTarget ? 'inline-block' : 'none' }}>Release to upload.</h3>
                 <Snackbar active={this.state.showSnackbar} onTimeout={this.onSnackbarTimeout}
                           onClick={this.onSnackbarTimeout} action='Close'>
                     {this.state.snackbarText}

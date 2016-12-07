@@ -1,6 +1,9 @@
 import React from 'react';
 import extend from 'extend';
 
+import domtoimage from 'dom-to-image';
+import FileSaver from 'file-saver';
+
 import Entity from './entity.jsx';
 
 export default class ModelCanvas extends React.Component {
@@ -8,6 +11,18 @@ export default class ModelCanvas extends React.Component {
         super(props);
 
         this.state = {};
+
+        window.screenshot = () => {
+            const canvas = document.getElementById('canvas');
+            canvas.style.overflow = 'visible';
+            window.setTimeout(() => {
+                domtoimage.toBlob(document.getElementById('canvas'))
+                    .then((blob) => {
+                        canvas.style.overflow = 'scroll';
+                        FileSaver.saveAs(blob, 'image.png');
+                    });
+            });
+        };
     }
 
     shouldComponentUpdate(nextProps) {
@@ -26,15 +41,8 @@ export default class ModelCanvas extends React.Component {
             entityDivs.push(<Entity entity={e} key={e.name} />);
         });
 
-        const style = extend({
-            position: 'relative',
-            overflow: 'scroll',
-            height: '100%',
-            width: '100%',
-        }, this.props.style);
-
         return (
-            <div style={style}>
+            <div style={this.props.style} id='canvas'>
                 {entityDivs}
             </div>
         );

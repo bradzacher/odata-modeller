@@ -17,17 +17,8 @@ export default class NavProperty extends React.Component {
             return (<div />);
         }
 
-        const itemStyle = {
-            // make the row full-bleed by expanding it past the parent padding
-            backgroundColor: '#add8e6',
-            width: 'calc(100% + 16px)',
-            marginLeft: '-8px',
-            paddingLeft: '16px',
-            paddingRight: '16px',
-        };
-
         return (
-            <ListItem style={itemStyle}>
+            <ListItem className='property nav-property'>
                 <ListItemContent>{this.props.property.name}</ListItemContent>
                 <ListItemAction>
                     <Tooltip label='Navigation Property'>
@@ -41,7 +32,9 @@ export default class NavProperty extends React.Component {
 
 NavProperty.defaultProps = {
     property: null,
+    className: '',
 };
 NavProperty.propTypes = {
     property: React.PropTypes.object,
+    className: React.PropTypes.string,
 };

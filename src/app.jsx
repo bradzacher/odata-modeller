@@ -6,7 +6,8 @@ import 'react-mdl/extra/material';
 // import ES6 shims..
 import 'array.prototype.find';
 
-import './index.scss';
+import styles from './index.scss';
+import colours from './colours';
 
 import UploadComponent from './containers/uploadComponentContainer.jsx';
 import ModelCanvas from './containers/modelCanvasContainer.jsx';
@@ -47,40 +48,29 @@ export default class App extends React.Component {
     }
 
     render() {
-        const uploadCloseButtonStyle = {
-            display: this.props.hasExistingMetadata ? 'block' : 'none',
-            position: 'absolute',
-            right: '12px',
-            top: '12px',
-        };
-        const contentStyle = {
-            display: 'none',
-        };
-        const uploadStyle = {
-            display: 'none',
-            height: '100%',
-            width: '100%',
-        };
+        let modelCanvasDisplay = 'none';
+        let uploaderDisplay = 'none';
         if (this.state.showUpload) {
-            uploadStyle.display = 'block';
+            uploaderDisplay = 'block';
         } else {
-            contentStyle.display = 'block';
+            modelCanvasDisplay = 'block';
         }
 
         return (
-            <div style={{ height: '100%' }}>
+            <div>
                 <Layout fixedHeader>
-                    <Header title='OData Model Viewer'>
+                    <Header title='OData Model Viewer' style={{ backgroundColor: colours.primary }}>
                         <Navigation>
                             <a href='#' onClick={this.showUpload}>
                                 Upload Metadata.xml
                             </a>
                         </Navigation>
                     </Header>
-                    <Content style={{ height: '100%' }}>
-                        <ModelCanvas style={contentStyle} />
-                        <div style={uploadStyle}>
-                            <FABButton onClick={this.closeUpload} style={uploadCloseButtonStyle} mini colored>
+                    <Content>
+                        <ModelCanvas style={{ display: modelCanvasDisplay }} />
+                        <div style={{ display: uploaderDisplay }} className='upload-container'>
+                            <FABButton onClick={this.closeUpload} className='upload-close-button'
+                                       style={{ display: this.props.hasExistingMetadata ? 'block' : 'none' }} mini>
                                 <Icon name='close' />
                             </FABButton>
                             <UploadComponent />

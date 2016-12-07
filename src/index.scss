@@ -1,52 +1,176 @@
+// theme colours
+$colour-primary: #56ba89;
+$colour-primary-light: #c9e9d9;
+$colour-primary-dark: #347f5a;
+$colour-accent: #ff9800;
+$colour-accent-light: #ffe0b3;
+$colour-accent-dark: #cc7a00;
+$colour-black: #000000;
+$colour-white: #ffffff;
+
 * {
     box-sizing: border-box;
 }
 
-// unfortunately MDL uses PX sizing, rather than em sizing
-// so we have to do some dodgey hard-coded styling to resize everything..
-$padding-scale: 0.5;
-$font-scale: 0.75;
-.entity {
-    .mdl-list {
-        margin: 0;
-        padding: 0;
+#app {
+    height: 100%;
 
-        .mdl-list__item {
-            // reduce the top/bottom padding - the list items will provide enough
-            padding: 16px * $padding-scale;
-            font-size: 16px * $font-scale;
-            // remove the min-height and let it flow from content sizing
-            min-height: auto;
+    .mdl-layout__content {
+        height: 100%;
+    }
+}
 
-            .mdl-list__item-secondary-content {
-                margin-left: 16px * $padding-scale;
+.upload-container {
+    height: 100%;
+    width: 100%;
 
-                .material-icons {
-                    font-size: 24px * $font-scale;
-                    height: 24px * $font-scale;
-                    width: 24px * $font-scale;
+    .upload-close-button {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        background-color: $colour-accent,
+    }
+
+    > div {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 24px;
+        border-style: solid;
+        border-width: 2px;
+    }
+
+    .upload-button-container {
+        position: relative;
+
+        // make the input invisible, but stretch it over the nicer looking stuff underneath
+        input {
+            opacity: 0;
+            height: calc(100% - 48px);
+            width: 100%;
+            position: absolute;
+            top: 24px;
+            left: 0px;
+            cursor: pointer;
+        }
+
+        .mdl-button {
+            cursor: pointer;
+            background-color: $colour-accent;
+        }
+
+        label {
+            display: block;
+            margin-top: 24px;
+            margin-bottom: 24px;
+            cursor: pointer;
+        }
+
+        .drop-title {
+            height: 56px;
+        }
+    }
+}
+
+#canvas {
+    position: relative;
+    overflow: scroll;
+    height: 100%;
+    width: 100%;
+
+    // unfortunately MDL uses PX sizing, rather than em sizing
+    // so we have to do some dodgey hard-coded styling to resize everything..
+    $padding-scale: 0.5;
+    $font-scale: 0.75;
+    .entity {
+        overflow: visible;
+        position: absolute;
+        min-width: 100;
+            // add a little padding so that the edge of the parent doesn't eat our nice shadows
+        padding-bottom: 8px;
+
+        .mdl-list {
+            margin: 0;
+            padding: 0;
+
+            .mdl-list__item {
+                // reduce the top/bottom padding - the list items will provide enough
+                padding: 16px * $padding-scale;
+                font-size: 16px * $font-scale;
+                // remove the min-height and let it flow from content sizing
+                min-height: auto;
+
+                .mdl-list__item-secondary-content {
+                    margin-left: 16px * $padding-scale;
+
+                    .material-icons {
+                        font-size: 24px * $font-scale;
+                        height: 24px * $font-scale;
+                        width: 24px * $font-scale;
+                    }
                 }
             }
         }
-    }
 
-    .mdl-card {
-        // we don't care how tall they are ultimately
-        min-height: auto;
+        .mdl-card {
+            overflow: hidden;
+            // we don't care how tall they are ultimately
+            min-height: auto;
 
-        .mdl-card__title {
-            // reduce the padding - the list items will provide enough
-            padding: 16px * $padding-scale;
+            .mdl-card__title {
+                background-color: $colour-accent;
+                cursor: move;
+                // reduce the padding - the list items will provide enough
+                padding: 16px * $padding-scale;
 
-            .mdl-card__title-text {
-                font-size: 24px * $font-scale;
+                .mdl-card__title-text {
+                    font-size: 24px * $font-scale;
+                }
+            }
+
+            .mdl-card__supporting-text {
+                width: 100%;
+                // remove the top/bottom padding - the list items will provide enough
+                padding: 0 16px * $padding-scale;
+            }
+
+            .property {
+                span.material-icons {
+                    color: $colour-primary-dark;
+                    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+                    text-align: center,
+                }
+
+                .material-icons {
+                    color: $colour-primary-dark;
+                }
+            }
+
+            .nav-property {
+                background-color: $colour-accent-light;
+                // make the row full-bleed by expanding it past the parent padding
+                width: calc(100% + 16px);
+                margin-left: -8px;
+                padding-left: 16px;
+                padding-right: 16px;
             }
         }
-
-        .mdl-card__supporting-text {
-            width: 100%;
-            // remove the top/bottom padding - the list items will provide enough
-            padding: 0 16px * $padding-scale;
-        }
     }
+}
+
+// workaround for https://github.com/tsayen/dom-to-image/issues/57
+// manually include a style for the MDL icon font
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
 }

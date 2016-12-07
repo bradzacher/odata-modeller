@@ -38,7 +38,7 @@ export default function metadata(state = {
         case ENTITY_MOVE: {
             // an entity was moved...
 
-            // copy the state
+            // copy the state - note we only copy objects along the path that is changing to make sure we only trigger the correct updates
             const newState = extend({}, state);
             newState.doc = extend({}, state.doc);
             const entities = newState.doc.entities = extend([], state.doc.entities);
