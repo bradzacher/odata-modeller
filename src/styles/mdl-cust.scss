@@ -1,0 +1,77 @@
+@import './colours';
+
+.mdl-layout__header {
+    background-color: $colour-primary;
+}
+
+.mdl-button--fab.mdl-button--colored {
+    &, &:hover {
+        background-color: $colour-accent;
+    }
+}
+
+.mdl-slider {
+    &.is-upgraded {
+        color: $colour-accent;
+
+        &::-ms-fill-lower {
+            background: linear-gradient(90deg, transparent, transparent 16px,
+                $colour-accent 0, $colour-accent 0);
+        }
+
+        // for some reason, the styling breaks if it's in a single, comma separated declaration...
+        &::-ms-thumb {
+            background: $colour-accent;
+        }
+        &::-moz-range-thumb {
+            background: $colour-accent;
+        }
+        &::-webkit-slider-thumb {
+            background: $colour-accent;
+        }
+        &:active::-ms-thumb {
+            background: $colour-accent;
+        }
+        &:active::-moz-range-thumb {
+            background: $colour-accent;
+        }
+        &:active::-webkit-slider-thumb {
+            background: $colour-accent;
+        }
+
+        &:focus:not(:active) {
+            &::-ms-thumb {
+                background: radial-gradient(circle closest-side,
+                    $colour-accent 0, $colour-accent 37.5%,
+                    rgba($colour-accent, .26) 0, rgba($colour-accent,.26) 100%);
+            }
+        }
+
+        &:focus:not(:active)::-ms-thumb {
+            background: rgba($colour-accent, 0.26);
+        }
+        &:focus:not(:active)::-moz-range-thumb {
+            background: rgba($colour-accent, 0.26);
+        }
+        &:focus:not(:active)::-webkit-slider-thumb, {
+            background: rgba($colour-accent, 0.26);
+        }
+    }
+}
+.mdl-slider__background-lower {
+    background-color: $colour-accent;
+}
+
+// workaround for https://github.com/tsayen/dom-to-image/issues/57
+// manually include a style for the MDL icon font
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+}
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+}

@@ -6,7 +6,8 @@ import 'react-mdl/extra/material';
 // import ES6 shims..
 import 'array.prototype.find';
 
-import './index.scss';
+import './styles/index.scss';
+import './styles/mdl-cust.scss';
 
 import UploadComponent from './containers/uploadComponentContainer.jsx';
 import ModelCanvas from './containers/modelCanvasContainer.jsx';
@@ -99,7 +100,7 @@ export default class App extends React.Component {
                         <ModelCanvas style={{ display: modelCanvasDisplay }} />
                         <div style={{ display: uploaderDisplay }} className='upload-container'>
                             <FABButton onClick={this.closeUpload} className='upload-close-button'
-                                       style={{ display: this.props.hasExistingMetadata ? 'block' : 'none' }} mini>
+                                       style={{ display: this.props.hasExistingMetadata ? 'block' : 'none' }} mini colored>
                                 <Icon name='close' />
                             </FABButton>
                             <UploadComponent />

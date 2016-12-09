@@ -1,12 +1,4 @@
-// theme colours
-$colour-primary: #56ba89;
-$colour-primary-light: #c9e9d9;
-$colour-primary-dark: #347f5a;
-$colour-accent: #ff9800;
-$colour-accent-light: #ffe0b3;
-$colour-accent-dark: #cc7a00;
-$colour-black: #000000;
-$colour-white: #ffffff;
+@import './colours';
 
 * {
     box-sizing: border-box;
@@ -14,10 +6,6 @@ $colour-white: #ffffff;
 
 #app {
     height: 100%;
-
-    .mdl-layout__header {
-        background-color: $colour-primary;
-    }
 
     .mdl-layout__content {
         height: 100%;
@@ -34,17 +22,11 @@ $colour-white: #ffffff;
         border-right: 1px solid $colour-white;
     }
     > *:first-child {
-        padding-right: 0px;
         border-right: none;
     }
 
-    .toggle-grid-size {
-        //padding-right: 40px;
-    }
-
-    .grid-size-slider {
-        display: flex;
-        font-size: 16px;
+    .mdl-icon-toggle.is-checked .mdl-icon-toggle__label {
+        color: $colour-accent-dark;
     }
 }
 
@@ -56,7 +38,6 @@ $colour-white: #ffffff;
         position: absolute;
         right: 12px;
         top: 12px;
-        background-color: $colour-accent,
     }
 
     > div {
@@ -87,7 +68,6 @@ $colour-white: #ffffff;
 
         .mdl-button {
             cursor: pointer;
-            background-color: $colour-accent;
         }
 
         label {
@@ -191,18 +171,4 @@ $colour-white: #ffffff;
             }
         }
     }
-}
-
-// workaround for https://github.com/tsayen/dom-to-image/issues/57
-// manually include a style for the MDL icon font
-@font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: local('Material Icons'), local('MaterialIcons-Regular'), url(https://fonts.gstatic.com/s/materialicons/v17/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
-}
-.material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
 }

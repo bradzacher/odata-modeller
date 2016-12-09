@@ -103,7 +103,7 @@ export default class UploadComponent extends React.Component {
                 <h3>Select, or drop a metadata.xml file</h3>
                 <div className='upload-button-container'>
                     <label htmlFor={inputId}>
-                        <FABButton style={{ display: isDropTarget ? 'none' : 'inline-block' }}>
+                        <FABButton style={{ display: isDropTarget ? 'none' : 'inline-block' }} colored>
                             <Icon name='file_upload' />
                         </FABButton>
                     </label>
