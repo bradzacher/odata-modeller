@@ -79,17 +79,13 @@ export default class Entity extends React.Component {
         }
 
         const containerStyles = {
-            minHeight: `${this.state.minHeight}px`,
-
             top: `${this.props.entity.top}px`,
             left: `${this.props.entity.left}px`,
-
-            width: `${this.props.entity.width}px`,
-            // don't explicitly set height unless it's been explicitly set..
-            height: this.props.entity.height ? `${this.props.entity.height}px` : 'auto',
         };
 
         const cardStyles = {
+            minHeight: `${this.state.minHeight}px`,
+
             width: `${this.props.entity.width}px`,
             height: this.props.entity.height ? `${this.props.entity.height}px` : 'auto',
         };

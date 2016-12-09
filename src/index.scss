@@ -21,6 +21,7 @@ $colour-white: #ffffff;
 
     .mdl-layout__content {
         height: 100%;
+        overflow: scroll;
     }
 }
 
@@ -81,7 +82,7 @@ $colour-white: #ffffff;
 
 #canvas {
     position: relative;
-    overflow: scroll;
+    overflow: visible;
     height: 100%;
     width: 100%;
 
@@ -93,8 +94,12 @@ $colour-white: #ffffff;
         overflow: visible;
         position: absolute;
         min-width: 100;
-            // add a little padding so that the edge of the parent doesn't eat our nice shadows
+        // add a little padding so that the edge of the parent doesn't eat our nice shadows
         padding-bottom: 8px;
+        padding-right: 8px;
+        // make sure it's auto-sized so that the padding is applied properly
+        height: auto;
+        width: auto;
 
         .mdl-list {
             margin: 0;

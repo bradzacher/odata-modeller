@@ -1,5 +1,4 @@
 import React from 'react';
-import extend from 'extend';
 
 import domtoimage from 'dom-to-image';
 import FileSaver from 'file-saver';
@@ -13,14 +12,10 @@ export default class ModelCanvas extends React.Component {
         this.state = {};
 
         window.screenshot = () => {
-            const canvas = document.getElementById('canvas');
-            canvas.style.overflow = 'visible';
-            window.setTimeout(() => {
-                domtoimage.toBlob(document.getElementById('canvas'))
-                    .then((blob) => {
-                        canvas.style.overflow = 'scroll';
-                        FileSaver.saveAs(blob, 'image.png');
-                    });
+            domtoimage.toBlob(document.getElementById('canvas'), {
+                bgcolor: '#FFFFFF',
+            }).then((blob) => {
+                FileSaver.saveAs(blob, 'image.png');
             });
         };
     }
@@ -36,14 +31,15 @@ export default class ModelCanvas extends React.Component {
             return (<div />);
         }
 
-        const entityDivs = [];
+        const entities = [];
         this.props.metadata.entities.forEach((e) => {
-            entityDivs.push(<Entity entity={e} key={e.name} />);
+            // build the components
+            entities.push(<Entity entity={e} key={e.name} />);
         });
 
         return (
             <div style={this.props.style} id='canvas'>
-                {entityDivs}
+                {entities}
             </div>
         );
     }
