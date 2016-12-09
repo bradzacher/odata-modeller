@@ -1,5 +1,6 @@
 import React from 'react';
-import { Layout, Header, HeaderRow, Navigation, Content, FABButton, Icon, Switch, Slider } from 'react-mdl';
+import { Layout, Header, HeaderRow, Navigation, Content, FABButton, Icon,
+        Slider, IconToggle, Tooltip } from 'react-mdl';
 // import the react-mdl library files
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material';
@@ -81,19 +82,14 @@ export default class App extends React.Component {
                             </Navigation>
                         </HeaderRow>
                         <HeaderRow className='toolbar'>
-                            <span className='toggle-grid-size'>
-                                <Switch ripple checked={this.props.snapToGrid} onChange={this.toggleSnapToGrid}>
-                                    Toggle Snap Grid.
-                                </Switch>
-                            </span>
-                            <span className='grid-size-slider'>
-                                <span>
-                                    Grid Size
-                                </span>
-                                <span>
-                                    <Slider min={0} max={10} defaultValue={this.props.gridSize} onChange={this.setGridSize} />
-                                </span>
-                            </span>
+                            <Tooltip label='Toggle Snap Grid'>
+                                <IconToggle ripple checked={this.props.snapToGrid} onChange={this.toggleSnapToGrid} name={
+                                    this.props.snapToGrid ? 'grid_on' : 'grid_off'
+                                } />
+                            </Tooltip>
+                            <Tooltip label='Grid Size'>
+                                <Slider min={4} max={20} defaultValue={this.props.gridSize} onChange={this.setGridSize} />
+                            </Tooltip>
                         </HeaderRow>
                     </Header>
                     <Content>
