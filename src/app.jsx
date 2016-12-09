@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Header, Navigation, Content, FABButton, Icon } from 'react-mdl';
+import { Layout, Header, HeaderRow, Navigation, Content, FABButton, Icon, Switch, Slider } from 'react-mdl';
 // import the react-mdl library files
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material';
@@ -11,16 +11,21 @@ import './index.scss';
 import UploadComponent from './containers/uploadComponentContainer.jsx';
 import ModelCanvas from './containers/modelCanvasContainer.jsx';
 
+import { snapToGrid, setGridSize } from './flux/actions/entityInteraction';
+import store from './flux/store';
+
 export default class App extends React.Component {
     constructor(props) {
         super(props);
 
         this.showUpload = this.showUpload.bind(this);
         this.closeUpload = this.closeUpload.bind(this);
+        this.toggleSnapToGrid = this.toggleSnapToGrid.bind(this);
 
         this.state = {
             showUpload: true,
             lastMetadataId: -1,
+            snapToGrid: false,
         };
     }
 
@@ -35,6 +40,14 @@ export default class App extends React.Component {
                 showUpload: false,
             });
         }
+    }
+
+    toggleSnapToGrid() {
+        store.dispatch(snapToGrid());
+    }
+
+    setGridSize(evt) {
+        store.dispatch(setGridSize(parseInt(evt.target.value, 10)));
     }
 
     componentWillReceiveProps(nextProps) {
@@ -58,12 +71,29 @@ export default class App extends React.Component {
         return (
             <div>
                 <Layout fixedHeader>
-                    <Header title='OData Model Viewer'>
-                        <Navigation>
-                            <a href='#' onClick={this.showUpload}>
-                                Upload Metadata.xml
-                            </a>
-                        </Navigation>
+                    <Header>
+                        <HeaderRow title='OData Model Viewer'>
+                            <Navigation>
+                                <a href='#' onClick={this.showUpload}>
+                                    Upload Metadata.xml
+                                </a>
+                            </Navigation>
+                        </HeaderRow>
+                        <HeaderRow className='toolbar'>
+                            <span className='toggle-grid-size'>
+                                <Switch ripple checked={this.props.snapToGrid} onChange={this.toggleSnapToGrid}>
+                                    Toggle Snap Grid.
+                                </Switch>
+                            </span>
+                            <span className='grid-size-slider'>
+                                <span>
+                                    Grid Size
+                                </span>
+                                <span>
+                                    <Slider min={0} max={10} defaultValue={this.props.gridSize} onChange={this.setGridSize} />
+                                </span>
+                            </span>
+                        </HeaderRow>
                     </Header>
                     <Content>
                         <ModelCanvas style={{ display: modelCanvasDisplay }} />
@@ -84,8 +114,12 @@ export default class App extends React.Component {
 App.defaultProps = {
     hasMetadata: false,
     metadataId: -1,
+    snapToGrid: true,
+    gridSize: 5,
 };
 App.propTypes = {
     hasExistingMetadata: React.PropTypes.bool,
     metadataId: React.PropTypes.number,
+    snapToGrid: React.PropTypes.bool,
+    gridSize: React.PropTypes.number,
 };

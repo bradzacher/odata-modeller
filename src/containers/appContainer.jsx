@@ -6,6 +6,8 @@ function mapStateToProps(state) {
     return {
         hasExistingMetadata: state.metadata.doc !== null,
         metadataId: state.metadata.metadataId,
+        snapToGrid: state.metadata.snapToGrid,
+        gridSize: state.metadata.gridSize,
     };
 }
 

@@ -68,14 +68,18 @@ function decodeMetadata(doc) {
                 }));
 
             // return the structured data
+            const top = ENTITY_POSITION_GUTTER;
+            const left = ENTITY_POSITION_GUTTER + (i * (INITIAL_ENTITY_WIDTH + ENTITY_SPACING_BUFFER));
             return {
                 name: getAttributeValue(entity, 'Name'),
                 properties,
                 navProperties,
                 width: INITIAL_ENTITY_WIDTH,
                 height: null,
-                top: ENTITY_POSITION_GUTTER,
-                left: ENTITY_POSITION_GUTTER + (i * (INITIAL_ENTITY_WIDTH + ENTITY_SPACING_BUFFER)),
+                absoluteTop: top,
+                absoluteLeft: left,
+                top,
+                left,
             };
         });
 

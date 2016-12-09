@@ -25,6 +25,29 @@ $colour-white: #ffffff;
     }
 }
 
+.toolbar {
+    flex-direction: row-reverse;
+
+    > * {
+        padding-left: 16px;
+        padding-right: 16px;
+        border-right: 1px solid $colour-white;
+    }
+    > *:first-child {
+        padding-right: 0px;
+        border-right: none;
+    }
+
+    .toggle-grid-size {
+        //padding-right: 40px;
+    }
+
+    .grid-size-slider {
+        display: flex;
+        font-size: 16px;
+    }
+}
+
 .upload-container {
     height: 100%;
     width: 100%;
