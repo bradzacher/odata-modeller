@@ -4,15 +4,11 @@ import { Card, CardTitle, CardText } from 'react-mdl';
 import PropertyList from './propertyList.jsx';
 
 import store from '../flux/store';
-import { entityMove } from '../flux/actions/entityInteraction';
+import { entityMove, entitySetSize, entityResize } from '../flux/actions/entityInteraction';
 
 export default class Entity extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            minHeight: 0,
-        };
 
         this.onPointerDown = this.onPointerDown.bind(this);
         this.onPointerUp = this.onPointerUp.bind(this);
@@ -26,11 +22,12 @@ export default class Entity extends React.Component {
     }
 
     componentDidMount() {
-        // save the browser calculated height as the minimum height
-        // this is so that the user can't hide properties on resize..
-        // TODO - do we want this...?
-        this.setState({
-            minHeight: this.container.clientHeight,
+        // save the browser calculated height as the entity's height
+        // note we have to wait a tick so the browser can actually do its render
+        window.setTimeout(() => {
+            store.dispatch(entitySetSize(this.container.clientWidth,
+                this.container.clientHeight,
+                this.props.entity));
         });
     }
 
@@ -74,6 +71,8 @@ export default class Entity extends React.Component {
     }
 
     render() {
+        console.renderLog('Entity');
+
         if (!this.props.entity) {
             return (<div />);
         }
@@ -84,8 +83,6 @@ export default class Entity extends React.Component {
         };
 
         const cardStyles = {
-            minHeight: `${this.state.minHeight}px`,
-
             width: `${this.props.entity.width}px`,
             height: this.props.entity.height ? `${this.props.entity.height}px` : 'auto',
         };

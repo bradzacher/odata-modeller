@@ -7,26 +7,26 @@ export function entityMove(movement, entity) {
     };
 }
 
-export const ENTITY_RESIZE = 'ENTITY_RESIZE';
-export function entityResize(dimensions, entity) {
+export const ENTITY_SET_SIZE = 'ENTITY_SET_SIZE';
+export function entitySetSize(width, height, entity) {
     return {
-        type: ENTITY_RESIZE,
-        dimensions,
+        type: ENTITY_SET_SIZE,
+        dimensions: {
+            width,
+            height,
+        },
         entity,
     };
 }
 
-export const SNAP_TO_GRID = 'SNAP_TO_GRID';
-export function snapToGrid() {
+export const ENTITY_RESIZE = 'ENTITY_RESIZE';
+export function entityResize(width, height, entity) {
     return {
-        type: SNAP_TO_GRID,
-    };
-}
-
-export const SET_GRID_SIZE = 'SET_GRID_SIZE';
-export function setGridSize(size) {
-    return {
-        type: SET_GRID_SIZE,
-        size,
+        type: ENTITY_RESIZE,
+        dimensionChange: {
+            width,
+            height,
+        },
+        entity,
     };
 }

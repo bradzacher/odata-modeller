@@ -74,10 +74,12 @@ function decodeMetadata(doc) {
                 name: getAttributeValue(entity, 'Name'),
                 properties,
                 navProperties,
+                unsnappedWidth: INITIAL_ENTITY_WIDTH,
+                unsnappedHeight: 0,
                 width: INITIAL_ENTITY_WIDTH,
                 height: null,
-                absoluteTop: top,
-                absoluteLeft: left,
+                unsnappedTop: top,
+                unsnappedLeft: left,
                 top,
                 left,
             };
@@ -96,7 +98,8 @@ function decodeMetadata(doc) {
 
             return {
                 name: getAttributeValue(ass, 'Name'),
-                entities: ends,
+                end1: ends[0],
+                end2: ends[1],
             };
         });
 
