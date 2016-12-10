@@ -26,6 +26,8 @@ export default class ModelCanvas extends React.Component {
     }
 
     render() {
+        console.renderLog('ModelCanvas');
+
         // no entity model? no render!
         if (!this.props.metadata) {
             return (<div />);

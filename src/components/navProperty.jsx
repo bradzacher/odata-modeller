@@ -13,6 +13,8 @@ export default class NavProperty extends React.Component {
     }
 
     render() {
+        console.renderLog('NavProperty');
+
         if (!this.props.property) {
             return (<div />);
         }

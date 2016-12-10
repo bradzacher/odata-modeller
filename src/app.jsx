@@ -13,7 +13,7 @@ import './styles/mdl-cust.scss';
 import UploadComponent from './containers/uploadComponentContainer.jsx';
 import ModelCanvas from './containers/modelCanvasContainer.jsx';
 
-import { snapToGrid, setGridSize } from './flux/actions/entityInteraction';
+import { snapToGrid, setGridSize } from './flux/actions/toolbarActions';
 import store from './flux/store';
 
 export default class App extends React.Component {

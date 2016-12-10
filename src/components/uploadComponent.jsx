@@ -90,6 +90,8 @@ export default class UploadComponent extends React.Component {
     }
 
     render() {
+        console.renderLog('UploadComponent');
+
         const isDropTarget = this.state.enterCount > 0;
         const inputId = 'upload-button';
 

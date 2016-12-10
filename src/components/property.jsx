@@ -13,6 +13,8 @@ export default class Property extends React.Component {
     }
 
     render() {
+        console.renderLog('Property');
+
         if (!this.props.property) {
             return (<div />);
         }

@@ -7,6 +7,13 @@ import { Provider } from 'react-redux';
 import App from './containers/appContainer.jsx';
 import store from './flux/store';
 
+const LOG_RENDER = false;
+console.renderLog = function renderLog(...msg) {
+    if (LOG_RENDER) {
+        console.log(...msg);
+    }
+};
+
 render(
     <AppContainer>
         <Provider store={store}>
