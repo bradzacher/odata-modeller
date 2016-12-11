@@ -4,8 +4,6 @@ import { Layout, Header, HeaderRow, Navigation, Content, FABButton, Icon,
 // import the react-mdl library files
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material';
-// import ES6 shims..
-import 'array.prototype.find';
 
 import './styles/index.scss';
 import './styles/mdl-cust.scss';

@@ -37,8 +37,9 @@ function decodeMetadata(doc) {
         (entity, i) => {
             // get the key names
             const keyElement = entity.getElementsByTagName('Key')[0];
-            const keyRefs = arrayLike('map', keyElement.getElementsByTagName('PropertyRef'),
-                k => getAttributeValue(k, 'Name'));
+            const keyRefs = new Set();
+            arrayLike('forEach', keyElement.getElementsByTagName('PropertyRef'),
+                k => keyRefs.add(getAttributeValue(k, 'Name')));
 
             // get the properties
             const properties = arrayLike('map', entity.getElementsByTagName('Property'),
@@ -49,7 +50,7 @@ function decodeMetadata(doc) {
                         type: getAttributeValue(p, 'Type'),
                         nullable: getAttributeValue(p, 'Nullable'),
                         // check if the property belogs to the entity's key
-                        isKey: !!keyRefs.find(k => k === name),
+                        isKey: keyRefs.has(name),
                     };
                 });
 

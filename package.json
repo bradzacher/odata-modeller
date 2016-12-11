@@ -24,8 +24,6 @@
         "lint": "eslint --ext js --ext jsx src || exit 0"
     },
     "dependencies": {
-        "array.prototype.find": "^2.0.0",
-        "array.prototype.findindex": "^2.0.0",
         "babel-core": "6.18.2",
         "babel-loader": "6.2.7",
         "babel-plugin-transform-class-properties": "^6.19.0",
