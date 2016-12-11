@@ -19,6 +19,13 @@ export default class Entity extends React.Component {
 
         // the coords of the last event's click
         this.lastEvent = null;
+        this.movement = {
+            x: 0,
+            y: 0,
+        };
+
+        // the animation frame
+        this.animationFrame = null;
     }
 
     shouldComponentUpdate(newProps) {
@@ -48,16 +55,32 @@ export default class Entity extends React.Component {
     }
 
     onPointerMove(evt) {
-        const movement = {
-            x: evt.screenX - this.lastEvent.x,
-            y: evt.screenY - this.lastEvent.y,
-        };
+        evt.preventDefault();
+
+        this.movement.x += evt.screenX - this.lastEvent.x;
+        this.movement.y += evt.screenY - this.lastEvent.y;
+
         this.lastEvent = {
             x: evt.screenX,
             y: evt.screenY,
         };
-        store.dispatch(entityMove(movement, this.props.entity));
-        evt.preventDefault();
+
+        if (this.animationFrame) {
+            return;
+        }
+
+        // do the store update on the next possible animation frame
+        // batch them to reduce the number of renders we need to do
+        this.animationFrame = window.requestAnimationFrame(() => {
+            store.dispatch(entityMove(this.movement, this.props.entity));
+
+            // clear the movement
+            this.movement = {
+                x: 0,
+                y: 0,
+            };
+            this.animationFrame = null;
+        });
     }
 
     render() {
