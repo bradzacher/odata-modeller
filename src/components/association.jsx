@@ -5,62 +5,88 @@ export default class Association extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            left: 0,
-            top: 0,
-            height: 0,
-            width: 0,
-        };
+        this.state = this.recalculateState(props);
+        this.nextFrame = null;
     }
 
     shouldComponentUpdate(nextProps) {
         return this.props.association !== nextProps.association ||
-            this.props.end1 !== nextProps.end1 ||
-            this.props.end2 !== nextProps.end2;
+            this.props.end1.position !== nextProps.end1.position ||
+            this.props.end2.position !== nextProps.end2.position ||
+            this.props.end1.size !== nextProps.end1.size ||
+            this.props.end2.size !== nextProps.end2.size;
     }
 
-    componentWillReceiveProps(nextProps) {
-        const { end1, end2 } = nextProps;
+    recalculateState(props) {
+        const { end1, end2 } = props;
+        const end1Pos = end1.position;
+        const end1Size = end1.size;
+        const end2Pos = end2.position;
+        const end2Size = end2.size;
 
         // figure out the canvas's size
-        const left = Math.min(end1.left, end2.left);
-        const top = Math.min(end1.top, end2.top);
+        const left = Math.min(end1Pos.left, end2Pos.left);
+        const top = Math.min(end1Pos.top, end2Pos.top);
 
-        const right = Math.max(end1.left + end1.width, end2.left + end2.width);
-        const bottom = Math.max(end1.top + end1.height, end2.top + end2.height);
+        const right = Math.max(end1Pos.left + end1Size.width, end2Pos.left + end2Size.width);
+        const bottom = Math.max(end1Pos.top + end1Size.height, end2Pos.top + end2Size.height);
 
         const height = bottom - top;
         const width = right - left;
 
-        this.setState({
+        return {
             left,
             top,
             height,
             width,
-        });
-    }
-
-
-    getEntityMiddle(entity) {
-        return {
-            left: (entity.left - this.state.left) + (entity.width / 2),
-            top: (entity.top - this.state.top) + (entity.height / 2),
         };
     }
 
-    componentDidUpdate() {
+    componentWillReceiveProps(nextProps) {
+        if (!this.shouldComponentUpdate(nextProps)) {
+            // don't do the calculations if nothing has changed
+            return;
+        }
+
+        this.setState(this.recalculateState(nextProps));
+    }
+
+    draw() {
         const canvas = ReactDOM.findDOMNode(this);
         const ctx = canvas.getContext('2d');
 
-        // figure out where to draw the lines
-        const pos1 = this.getEntityMiddle(this.props.end1, canvas);
-        const pos2 = this.getEntityMiddle(this.props.end2, canvas);
+        // we've got a render pending, so don't queue another
+        if (this.nextFrame) {
+            return;
+        }
 
-        // draw the line
-        ctx.beginPath();
-        ctx.moveTo(pos1.left, pos1.top);
-        ctx.lineTo(pos2.left, pos2.top);
-        ctx.stroke();
+        this.nextFrame = window.requestAnimationFrame(() => {
+            // figure out where to draw the lines
+            const midpoint1 = {
+                top: this.props.end1.midpoint.top - this.state.top,
+                left: this.props.end1.midpoint.left - this.state.left,
+            };
+            const midpoint2 = {
+                top: this.props.end2.midpoint.top - this.state.top,
+                left: this.props.end2.midpoint.left - this.state.left,
+            };
+
+            // draw the line
+            ctx.beginPath();
+            ctx.moveTo(midpoint1.left, midpoint1.top);
+            ctx.lineTo(midpoint2.left, midpoint2.top);
+            ctx.stroke();
+
+            this.nextFrame = null;
+        });
+    }
+
+    componentDidMount() {
+        this.draw();
+    }
+
+    componentDidUpdate() {
+        this.draw();
     }
 
     render() {

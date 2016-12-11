@@ -4,7 +4,7 @@ import { Card, CardTitle, CardText } from 'react-mdl';
 import PropertyList from './propertyList.jsx';
 
 import store from '../flux/store';
-import { entityMove, entitySetSize, entityResize } from '../flux/actions/entityInteraction';
+import { entityMove, entityResize } from '../flux/actions/entityInteraction';
 
 export default class Entity extends React.Component {
     constructor(props) {
@@ -19,16 +19,6 @@ export default class Entity extends React.Component {
 
         // the coords of the last event's click
         this.lastEvent = null;
-    }
-
-    componentDidMount() {
-        // save the browser calculated height as the entity's height
-        // note we have to wait a tick so the browser can actually do its render
-        window.setTimeout(() => {
-            store.dispatch(entitySetSize(this.container.clientWidth,
-                this.container.clientHeight,
-                this.props.entity));
-        });
     }
 
     shouldComponentUpdate(newProps) {
@@ -78,13 +68,13 @@ export default class Entity extends React.Component {
         }
 
         const containerStyles = {
-            top: `${this.props.entity.top}px`,
-            left: `${this.props.entity.left}px`,
+            top: `${this.props.entity.position.top}px`,
+            left: `${this.props.entity.position.left}px`,
         };
 
         const cardStyles = {
-            width: `${this.props.entity.width}px`,
-            height: this.props.entity.height ? `${this.props.entity.height}px` : 'auto',
+            width: `${this.props.entity.size.width}px`,
+            height: `${this.props.entity.size.height}px`,
         };
 
         return (

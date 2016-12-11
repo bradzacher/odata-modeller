@@ -1,12 +1,28 @@
 import extend from 'extend';
 
+import calculateMidpoint from '../calculateMidpoint';
+
 import { READ_FILE, PARSE_FILE, PARSE_FILE_ERROR } from '../actions/readFile';
-import { ENTITY_MOVE, ENTITY_SET_SIZE, ENTITY_RESIZE } from '../actions/entityInteraction';
+import { ENTITY_MOVE, ENTITY_RESIZE } from '../actions/entityInteraction';
 import { SNAP_TO_GRID, SET_GRID_SIZE } from '../actions/toolbarActions';
 
 const INITIAL_GRID_SIZE = 5;
 
 let metadataId = 0;
+
+function copyEntityState(state, action) {
+    // note we only copy objects along the path that is changing to make sure we only trigger the correct updates
+    const newState = extend({}, state);
+    newState.doc = extend({}, state.doc);
+    const entities = newState.doc.entities = new Map(state.doc.entities);
+    // get the specific entity
+    const entity = extend({}, entities.get(action.entity.name));
+
+    return {
+        newState,
+        entity,
+    };
+}
 
 export default function metadata(state = {
     isParsing: false,
@@ -62,38 +78,30 @@ export default function metadata(state = {
                 return state;
             }
 
-            // copy the state - note we only copy objects along the path that is changing to make sure we only trigger the correct updates
-            const newState = extend({}, state);
-            newState.doc = extend({}, state.doc);
-            const entities = newState.doc.entities = extend([], state.doc.entities);
+            // copy the state
+            const { newState, entity } = copyEntityState(state, action);
+            entity.position = extend({}, entity.position);
 
             // update the entity with a new location
-            const i = entities.findIndex(e => e.name === action.entity.name);
-            const entity = extend({}, entities[i]);
-            entity.unsnappedLeft += action.movement.x;
-            entity.unsnappedTop += action.movement.y;
+            entity.position.unsnappedLeft += action.movement.x;
+            entity.position.unsnappedTop += action.movement.y;
 
             if (state.snapToGrid) {
                 // snap the position to grid
-                entity.left = entity.unsnappedLeft - (entity.unsnappedLeft % state.gridSize);
-                entity.top = entity.unsnappedTop - (entity.unsnappedTop % state.gridSize);
+                entity.position.left = entity.position.unsnappedLeft - (entity.position.unsnappedLeft % state.gridSize);
+                entity.position.top = entity.position.unsnappedTop - (entity.position.unsnappedTop % state.gridSize);
             } else {
                 // use the pixel-perfect position
-                entity.left = entity.unsnappedLeft;
-                entity.top = entity.unsnappedTop;
+                entity.position.left = entity.position.unsnappedLeft;
+                entity.position.top = entity.position.unsnappedTop;
             }
-            newState.doc.entities[i] = entity;
+            // recalculate the midpoint
+            entity.midpoint = calculateMidpoint(entity);
 
+            newState.doc.entities.set(entity.name, entity);
             return newState;
         }
 
-        case ENTITY_SET_SIZE:
-            // reuse use the ENTIY_RESIZE action
-            action.dimensionChange = {
-                height: action.dimensions.height - action.entity.unsnappedHeight,
-                width: action.dimensions.width - action.entity.unsnappedWidth,
-            };
-        // eslint-disable-nextline no-fallthrough
         case ENTITY_RESIZE: {
             // an entity was resized...
             if (action.dimensionChange.height === 0 &&
@@ -102,28 +110,27 @@ export default function metadata(state = {
                 return state;
             }
 
-            // copy the state - note we only copy objects along the path that is changing to make sure we only trigger the correct updates
-            const newState = extend({}, state);
-            newState.doc = extend({}, state.doc);
-            const entities = newState.doc.entities = extend([], state.doc.entities);
+            // copy the state
+            const { newState, entity } = copyEntityState(state, action);
+            entity.size = extend({}, entity.size);
 
             // update the entity with a new size
-            const i = entities.findIndex(e => e.name === action.entity.name);
-            const entity = extend({}, entities[i]);
-            entity.unsnappedWidth += action.dimensionChange.width;
-            entity.unsnappedHeight += action.dimensionChange.height;
+            entity.size.unsnappedWidth += action.dimensionChange.width;
+            entity.size.unsnappedHeight += action.dimensionChange.height;
 
             if (state.snapToGrid) {
                 // snap the dimension to grid
-                entity.width = entity.unsnappedWidth - (entity.unsnappedWidth % state.gridSize);
-                entity.height = entity.unsnappedHeight - (entity.unsnappedHeight % state.gridSize);
+                entity.size.width = entity.size.unsnappedWidth - (entity.size.unsnappedWidth % state.gridSize);
+                entity.size.height = entity.size.unsnappedHeight - (entity.size.unsnappedHeight % state.gridSize);
             } else {
                 // use the pixel-perfect dimension
-                entity.width = entity.unsnappedWidth;
-                entity.height = entity.unsnappedHeight;
+                entity.size.width = entity.size.unsnappedWidth;
+                entity.size.height = entity.size.unsnappedHeight;
             }
-            newState.doc.entities[i] = entity;
+            // recalculate the midpoint
+            entity.midpoint = calculateMidpoint(entity);
 
+            newState.doc.entities.set(entity.name, entity);
             return newState;
         }
 

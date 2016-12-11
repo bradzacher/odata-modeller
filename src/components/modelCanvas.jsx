@@ -35,17 +35,15 @@ export default class ModelCanvas extends React.Component {
         }
 
         const entities = [];
-        const entitiesByName = new Map();
         this.props.metadata.entities.forEach((e) => {
             // build the components
             entities.push(<Entity entity={e} key={e.name} />);
-            entitiesByName.set(e.name, e);
         });
 
         const associations = [];
         this.props.metadata.associations.forEach((a) => {
-            const end1 = entitiesByName.get(a.end1.name);
-            const end2 = entitiesByName.get(a.end2.name);
+            const end1 = this.props.metadata.entities.get(a.end1.name);
+            const end2 = this.props.metadata.entities.get(a.end2.name);
             associations.push(<Association association={a} end1={end1} end2={end2} key={a.name} />);
         });
 

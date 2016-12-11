@@ -1,6 +1,10 @@
+import calculateMidpoint from '../calculateMidpoint';
+
 const INITIAL_ENTITY_WIDTH = 250;
 const ENTITY_SPACING_BUFFER = 24;
 const ENTITY_POSITION_GUTTER = 8;
+const ENTITY_PROPERTY_HEIGHT = 36;
+const ENTITY_HEADER_HEIGHT = 37;
 
 export const PARSE_FILE_ERROR = 'PARSE_FILE_ERROR';
 function parseFileError(detailedError) {
@@ -28,7 +32,8 @@ function decodeMetadata(doc) {
     const namespace = `${getAttributeValue(schema, 'Namespace')}.`;
 
     // grab the entities
-    const entities = arrayLike('map', schema.getElementsByTagName('EntityType'),
+    const entities = new Map();
+    arrayLike('forEach', schema.getElementsByTagName('EntityType'),
         (entity, i) => {
             // get the key names
             const keyElement = entity.getElementsByTagName('Key')[0];
@@ -67,26 +72,37 @@ function decodeMetadata(doc) {
                     association: getAttributeValue(p, 'Relationship').replace(namespace, ''),
                 }));
 
-            // return the structured data
+            // calculate the initial size and positions
             const top = ENTITY_POSITION_GUTTER;
             const left = ENTITY_POSITION_GUTTER + (i * (INITIAL_ENTITY_WIDTH + ENTITY_SPACING_BUFFER));
-            return {
+            const width = INITIAL_ENTITY_WIDTH;
+            const height = ENTITY_HEADER_HEIGHT + ((navProperties.length + properties.length) * ENTITY_PROPERTY_HEIGHT);
+
+            // return the structured data
+            const obj = {
                 name: getAttributeValue(entity, 'Name'),
                 properties,
                 navProperties,
-                unsnappedWidth: INITIAL_ENTITY_WIDTH,
-                unsnappedHeight: 0,
-                width: INITIAL_ENTITY_WIDTH,
-                height: null,
-                unsnappedTop: top,
-                unsnappedLeft: left,
-                top,
-                left,
+                position: {
+                    unsnappedTop: top,
+                    unsnappedLeft: left,
+                    top,
+                    left,
+                },
+                size: {
+                    unsnappedWidth: width,
+                    unsnappedHeight: height,
+                    width,
+                    height,
+                },
             };
+            obj.midpoint = calculateMidpoint(obj);
+            entities.set(obj.name, obj);
         });
 
     // get the associations
-    const associations = arrayLike('map', schema.getElementsByTagName('Association'),
+    const associations = new Map();
+    arrayLike('forEach', schema.getElementsByTagName('Association'),
         (ass) => {
             // there should be two ends listed - the entities which are joined by the association
             const ends = arrayLike('map', ass.getElementsByTagName('End'),
@@ -96,11 +112,12 @@ function decodeMetadata(doc) {
                     multiplicity: getAttributeValue(end, 'Multiplicity'),
                 }));
 
-            return {
+            const obj = {
                 name: getAttributeValue(ass, 'Name'),
                 end1: ends[0],
                 end2: ends[1],
             };
+            associations.set(obj.name, obj);
         });
 
     return {
