@@ -23,7 +23,7 @@ export default class NavProperty extends React.Component {
             <ListItem className='property nav-property'>
                 <ListItemContent>{this.props.property.name}</ListItemContent>
                 <ListItemAction>
-                    <Tooltip label='Navigation Property'>
+                    <Tooltip label='Navigation Property' position='left'>
                         <Icon name='call_missed_outgoing' />
                     </Tooltip>
                 </ListItemAction>

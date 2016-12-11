@@ -133,10 +133,10 @@ export default class Property extends React.Component {
             <ListItem className='property'>
                 <ListItemContent>{this.props.property.name}</ListItemContent>
                 <ListItemAction>
-                    <Tooltip label={iconText}>
+                    <Tooltip label={iconText} position='left'>
                         <Icon name={icon} />
                     </Tooltip>
-                    <Tooltip label={typeTooltip}>
+                    <Tooltip label={typeTooltip} position='left'>
                         {typeElement}
                     </Tooltip>
                 </ListItemAction>
