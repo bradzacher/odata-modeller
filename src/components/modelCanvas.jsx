@@ -5,12 +5,16 @@ import FileSaver from 'file-saver';
 
 import Entity from './entity.jsx';
 import Association from './association.jsx';
+import AssociationCanvas from './associationCanvas.jsx';
 
 export default class ModelCanvas extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {};
+        this.state = {
+            height: '100%',
+            width: '100%',
+        };
 
         window.screenshot = () => {
             domtoimage.toBlob(document.getElementById('canvas'), {
@@ -34,12 +38,13 @@ export default class ModelCanvas extends React.Component {
             return (<div />);
         }
 
+        // build the entities
         const entities = [];
         this.props.metadata.entities.forEach((e) => {
-            // build the components
             entities.push(<Entity entity={e} key={e.name} />);
         });
 
+        // build the associations
         const associations = [];
         this.props.metadata.associations.forEach((a) => {
             const end1 = this.props.metadata.entities.get(a.end1.name);
@@ -47,10 +52,20 @@ export default class ModelCanvas extends React.Component {
             associations.push(<Association association={a} end1={end1} end2={end2} key={a.name} />);
         });
 
+        // figure out the canvas dimensions based on the child sizing
+        let height = 0;
+        let width = 0;
+        this.props.metadata.entities.forEach((e) => {
+            height = Math.max(height, e.position.top + e.size.height);
+            width = Math.max(width, e.position.left + e.size.width);
+        });
+
         return (
             <div style={this.props.style} id='canvas'>
                 {entities}
-                {associations}
+                <AssociationCanvas height={height} width={width}>
+                    {associations}
+                </AssociationCanvas>
             </div>
         );
     }
